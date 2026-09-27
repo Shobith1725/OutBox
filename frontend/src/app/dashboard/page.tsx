@@ -20,7 +20,7 @@ import { EmailList } from '@/components/EmailList';
 import { ComposeEmail } from '@/components/ComposeEmail';
 import toast from 'react-hot-toast';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -236,5 +236,19 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center text-sm text-gray-500">
+          Loading OutBox...
+        </div>
+      }
+    >
+      <DashboardContent />
+    </React.Suspense>
   );
 }
