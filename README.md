@@ -2,7 +2,14 @@
 
 A full-stack email scheduling system with BullMQ-powered job queuing, per-sender rate limiting, Slack notifications, and Elasticsearch search.
 
-> **Single-Tenant Assumption**: This system is designed for a single Google-authenticated user who owns all senders and campaigns. Multi-tenant isolation is not implemented by design.
+## 🚀 Live Production Links
+- **Live Application**: [https://out-box-icam.vercel.app](https://out-box-icam.vercel.app)
+- **Backend API**: [https://outbox-backend-df7m.onrender.com](https://outbox-backend-df7m.onrender.com)
+- **Bull-Board Queue Monitor**: [https://outbox-backend-df7m.onrender.com/admin/queues](https://outbox-backend-df7m.onrender.com/admin/queues) *(admin / admin)*
+
+---
+
+> **Single-Tenant Assumption**: This system is designed for a single authenticated user who owns all senders and campaigns. Multi-tenant isolation is not implemented by design.
 
 ---
 
