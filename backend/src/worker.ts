@@ -149,8 +149,8 @@ async function processEmailJob(job: Job<EmailJobData>): Promise<void> {
         smtpErr.code === 'ECONNREFUSED' ||
         smtpErr.code === 'ESOCKET'
       ) {
-        console.warn(`[Worker] Outbound SMTP port blocked by cloud host (${smtpErr.message}). Using simulated delivery.`);
-        previewUrl = `https://ethereal.email/messages`;
+        console.warn(`[Worker] Outbound SMTP port blocked by cloud host (${smtpErr.message}). Using OutBox preview page.`);
+        previewUrl = `https://outbox-backend-df7m.onrender.com/api/emails/${scheduledEmailId}/preview`;
       } else {
         throw smtpErr;
       }
