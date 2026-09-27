@@ -227,9 +227,7 @@ router.get('/sent', requireAuth, async (req: Request, res: Response) => {
       status: e.status,
       sentAt: e.sentAt?.toISOString() || null,
       error: e.error,
-      previewUrl: (!e.previewUrl || e.previewUrl === 'https://ethereal.email/messages')
-        ? `https://outbox-backend-df7m.onrender.com/api/emails/${e.id}/preview`
-        : e.previewUrl,
+      previewUrl: `https://outbox-backend-df7m.onrender.com/api/emails/${e.id}/preview`,
       senderEmail: e.campaign.sender.fromEmail,
       senderName: e.campaign.sender.displayName,
       campaignId: e.campaignId,

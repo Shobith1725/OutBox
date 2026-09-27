@@ -78,6 +78,9 @@ export function EmailList({ emails, loading, type }: EmailListProps) {
       {emails.map((email) => (
         <div
           key={email.id}
+          onClick={() => {
+            if (email.previewUrl) window.open(email.previewUrl, '_blank');
+          }}
           className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50/50 transition-colors cursor-pointer group"
         >
           {/* Recipient */}
