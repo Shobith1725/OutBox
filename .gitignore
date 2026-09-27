@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.next/
+.env
+.env.local
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Docker volumes
+postgres_data/
+redis_data/
+es_data/
+
+# Screenshots (not needed in repo)
+*.png
