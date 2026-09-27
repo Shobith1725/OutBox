@@ -145,7 +145,7 @@ router.get('/scheduled', requireAuth, async (req: Request, res: Response) => {
 
   const [data, total] = await Promise.all([
     prisma.scheduledEmail.findMany({
-      where,
+      where: where as any,
       include: {
         campaign: {
           include: { sender: { select: { displayName: true, fromEmail: true } } },
@@ -155,7 +155,7 @@ router.get('/scheduled', requireAuth, async (req: Request, res: Response) => {
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.scheduledEmail.count({ where }),
+    prisma.scheduledEmail.count({ where: where as any }),
   ]);
 
   res.json({
@@ -204,7 +204,7 @@ router.get('/sent', requireAuth, async (req: Request, res: Response) => {
 
   const [data, total] = await Promise.all([
     prisma.scheduledEmail.findMany({
-      where,
+      where: where as any,
       include: {
         campaign: {
           include: { sender: { select: { displayName: true, fromEmail: true } } },
@@ -214,7 +214,7 @@ router.get('/sent', requireAuth, async (req: Request, res: Response) => {
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.scheduledEmail.count({ where }),
+    prisma.scheduledEmail.count({ where: where as any }),
   ]);
 
   res.json({

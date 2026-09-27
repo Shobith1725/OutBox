@@ -185,7 +185,7 @@ async function searchEmailsPostgres(
 
   const [emails, total] = await Promise.all([
     prisma.scheduledEmail.findMany({
-      where,
+      where: where as any,
       skip,
       take: pageSize,
       orderBy: { scheduledAt: 'desc' },
@@ -195,7 +195,7 @@ async function searchEmailsPostgres(
         },
       },
     }),
-    prisma.scheduledEmail.count({ where }),
+    prisma.scheduledEmail.count({ where: where as any }),
   ]);
 
   const hits = emails.map((e: any) => ({
