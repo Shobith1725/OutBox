@@ -57,7 +57,7 @@ export function ComposeEmail({ senders, onClose, onScheduled }: ComposeEmailProp
     try {
       const result = await uploadCsv(file);
       setRecipients((prev) => {
-        const combined = [...new Set([...prev, ...result.emails])];
+        const combined = Array.from(new Set([...prev, ...result.emails]));
         return combined;
       });
       toast.success(`Added ${result.count} emails from file`);
