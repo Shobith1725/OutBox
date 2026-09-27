@@ -48,11 +48,16 @@ export async function reconcilePendingEmails(): Promise<number> {
 
   for (const email of pendingEmails) {
     try {
-      // Check if the BullMQ job still exists
+      // Check if the BullMQ job still exists or previously failed
       const existingJob = await emailQueue.getJob(email.bullJobId);
+      const isFailed = existingJob ? await existingJob.isFailed() : false;
 
-      if (!existingJob) {
-        // Job is missing from Redis — re-enqueue it
+      if (!existingJob || isFailed) {
+        if (existingJob && isFailed) {
+          await existingJob.remove().catch(() => {});
+        }
+
+        // Job is missing or failed — re-enqueue it
         const now = Date.now();
         const scheduledAtMs = email.scheduledAt.getTime();
         const delay = Math.max(0, scheduledAtMs - now);
