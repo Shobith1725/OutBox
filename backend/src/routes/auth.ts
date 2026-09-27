@@ -2,6 +2,7 @@ import { Router } from 'express';
 import passport from '../auth/passport';
 import { config } from '../config';
 import { requireAuth } from '../auth/middleware';
+import prisma from '../lib/prisma';
 
 const router = Router();
 
