@@ -25,6 +25,51 @@ router.get(
   }
 );
 
+// Direct Email/Password login or registration
+router.post('/login', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email || typeof email !== 'string' || !email.includes('@')) {
+    return res.status(400).json({ error: 'A valid email address is required' });
+  }
+
+  const cleanEmail = email.toLowerCase().trim();
+
+  try {
+    let user = await prisma.user.findUnique({
+      where: { email: cleanEmail },
+    });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          googleId: `local_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+          email: cleanEmail,
+          name: cleanEmail.split('@')[0],
+        },
+      });
+      console.log(`[Auth] Created email user: ${cleanEmail}`);
+    }
+
+    req.login(user, (err) => {
+      if (err) {
+        console.error('[Auth] req.login error:', err);
+        return res.status(500).json({ error: 'Session creation failed' });
+      }
+
+      res.json({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar,
+      });
+    });
+  } catch (err: any) {
+    console.error('[Auth] Login error:', err.message);
+    res.status(500).json({ error: 'Login failed', details: err.message });
+  }
+});
+
 // Logout
 router.post('/logout', (req, res) => {
   req.logout((err) => {

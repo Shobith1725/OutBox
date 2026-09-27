@@ -28,6 +28,13 @@ export function getGoogleLoginUrl(): string {
   return `${API_URL}/auth/google`;
 }
 
+export async function loginWithEmail(email: string, password?: string) {
+  return apiFetch<import('@/types').UserResponse>('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
+}
+
 export async function getCurrentUser() {
   return apiFetch<import('@/types').UserResponse>('/auth/me');
 }

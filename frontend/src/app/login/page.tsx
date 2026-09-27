@@ -1,8 +1,35 @@
 'use client';
 
-import { getGoogleLoginUrl } from '@/lib/api';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getGoogleLoginUrl, loginWithEmail } from '@/lib/api';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await loginWithEmail(email, password);
+      toast.success('Logged in successfully!');
+      router.push('/dashboard');
+    } catch (err: any) {
+      toast.error(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Top dark header bar */}
@@ -48,29 +75,31 @@ export default function LoginPage() {
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
-          {/* Email/Password fields (decorative — only Google OAuth is functional) */}
-          <div className="space-y-4">
+          {/* Email/Password form */}
+          <form onSubmit={handleEmailLogin} className="space-y-4">
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email ID"
-              className="w-full border border-gray-200 rounded-md py-3 px-4 text-sm text-gray-500 bg-gray-50 outline-none cursor-not-allowed"
-              disabled
-              title="Only Google OAuth is supported"
+              required
+              className="w-full border border-gray-200 rounded-md py-3 px-4 text-sm text-gray-800 bg-white outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
             />
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full border border-gray-200 rounded-md py-3 px-4 text-sm text-gray-500 bg-gray-50 outline-none cursor-not-allowed"
-              disabled
-              title="Only Google OAuth is supported"
+              className="w-full border border-gray-200 rounded-md py-3 px-4 text-sm text-gray-800 bg-white outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
             />
             <button
-              disabled
-              className="w-full bg-emerald-500 text-white rounded-md py-3 text-sm font-medium cursor-not-allowed opacity-70"
+              type="submit"
+              disabled={loading}
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white rounded-md py-3 text-sm font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
