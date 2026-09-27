@@ -248,7 +248,13 @@ async function startWorker() {
   process.on('SIGINT', shutdown);
 }
 
-startWorker().catch((err) => {
-  console.error('[Worker] Fatal error:', err);
-  process.exit(1);
-});
+export { startWorker };
+
+// Only auto-start when run directly (not imported)
+const isMainModule = require.main === module;
+if (isMainModule) {
+  startWorker().catch((err) => {
+    console.error('[Worker] Fatal error:', err);
+    process.exit(1);
+  });
+}

@@ -16,6 +16,9 @@ import senderRoutes from './routes/senders';
 
 const app = express();
 
+// Trust reverse proxy (needed for Render / HTTPS cookies)
+app.set('trust proxy', 1);
+
 // ─── CORS ───────────────────────────────────────────────────────
 // Support both production frontend URL and localhost for development
 const allowedOrigins = [config.frontendUrl, 'http://localhost:3000'].filter(Boolean);

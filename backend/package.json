@@ -6,6 +6,7 @@
     "build": "prisma generate && tsc",
     "start:api": "node dist/index.js",
     "start:worker": "node dist/worker.js",
+    "start:prod": "npx prisma migrate deploy && node dist/start.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "worker": "ts-node-dev --respawn --transpile-only src/worker.ts",
     "seed": "ts-node src/scripts/seed-senders.ts",
