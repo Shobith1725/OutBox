@@ -45,7 +45,7 @@ router.get('/callback', requireAuth, async (req: Request, res: Response) => {
       }),
     });
 
-    const data = await response.json();
+    const data = (await response.json()) as any;
 
     if (!data.ok) {
       console.error('[Slack] OAuth error:', data.error);
