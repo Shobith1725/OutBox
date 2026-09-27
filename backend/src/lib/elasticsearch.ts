@@ -174,14 +174,12 @@ async function searchEmailsPostgres(
   pageSize: number
 ): Promise<{ hits: any[]; total: number }> {
   const skip = (page - 1) * pageSize;
-  const pattern = `%${query}%`;
 
-  const where = {
+  const where: any = {
     OR: [
-      { recipientEmail: { contains: query, mode: 'insensitive' as const } },
-      { subject: { contains: query, mode: 'insensitive' as const } },
-      { body: { contains: query, mode: 'insensitive' as const } },
-      { status: { contains: query, mode: 'insensitive' as const } },
+      { recipientEmail: { contains: query, mode: 'insensitive' } },
+      { campaign: { subject: { contains: query, mode: 'insensitive' } } },
+      { campaign: { body: { contains: query, mode: 'insensitive' } } },
     ],
   };
 
@@ -191,7 +189,11 @@ async function searchEmailsPostgres(
       skip,
       take: pageSize,
       orderBy: { scheduledAt: 'desc' },
-      include: { sender: true },
+      include: {
+        campaign: {
+          include: { sender: true },
+        },
+      },
     }),
     prisma.scheduledEmail.count({ where }),
   ]);
@@ -199,13 +201,14 @@ async function searchEmailsPostgres(
   const hits = emails.map((e: any) => ({
     id: e.id,
     recipient: e.recipientEmail,
-    subject: e.subject,
+    subject: e.campaign?.subject || '',
+    body: e.campaign?.body || '',
     status: e.status,
     scheduledAt: e.scheduledAt,
     sentAt: e.sentAt,
-    senderId: e.senderId,
+    senderId: e.campaign?.senderId || '',
     campaignId: e.campaignId,
-    senderEmail: e.sender?.fromEmail || '',
+    senderEmail: e.campaign?.sender?.fromEmail || '',
   }));
 
   return { hits, total };
