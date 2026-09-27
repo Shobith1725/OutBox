@@ -15,6 +15,12 @@ interface ComposeEmailProps {
 
 export function ComposeEmail({ senders, onClose, onScheduled }: ComposeEmailProps) {
   const [selectedSender, setSelectedSender] = useState(senders[0]?.id || '');
+
+  React.useEffect(() => {
+    if ((!selectedSender || !senders.some((s) => s.id === selectedSender)) && senders.length > 0) {
+      setSelectedSender(senders[0].id);
+    }
+  }, [senders, selectedSender]);
   const [recipients, setRecipients] = useState<string[]>([]);
   const [recipientInput, setRecipientInput] = useState('');
   const [subject, setSubject] = useState('');
@@ -232,17 +238,21 @@ export function ComposeEmail({ senders, onClose, onScheduled }: ComposeEmailProp
           {/* From */}
           <div className="flex items-center gap-4 mb-4">
             <label className="text-sm text-gray-500 w-16">From</label>
-            <select
-              value={selectedSender}
-              onChange={(e) => setSelectedSender(e.target.value)}
-              className="bg-gray-100 border border-gray-200 rounded-md px-3 py-1.5 text-sm text-gray-700 outline-none focus:border-emerald-400"
-            >
-              {senders.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.displayName} ({s.fromEmail})
-                </option>
-              ))}
-            </select>
+            {senders.length === 0 ? (
+              <span className="text-sm text-gray-400 italic">Setting up your email sender...</span>
+            ) : (
+              <select
+                value={selectedSender}
+                onChange={(e) => setSelectedSender(e.target.value)}
+                className="bg-gray-100 border border-gray-200 rounded-md px-3 py-1.5 text-sm text-gray-700 outline-none focus:border-emerald-400 min-w-[280px]"
+              >
+                {senders.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.displayName ? `${s.displayName} <${s.fromEmail}>` : s.fromEmail}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           {/* To */}
